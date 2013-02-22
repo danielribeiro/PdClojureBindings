@@ -1,13 +1,3 @@
-# app
+Still work in progress
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2013 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+The docs for the API can be found at [http://developer.pagerduty.com/](http://developer.pagerduty.com/)
