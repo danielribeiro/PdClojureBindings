@@ -2,3 +2,4 @@ out
 target
 .lein-repl-history
 .lein-failures
+lib
