@@ -108,16 +108,25 @@
 
 (defn partition-with [pred coll]
   [(filter pred coll) (remove pred coll)])
+
 (defn complex? [expr] (some vector? expr))
 ;(partition-with vector? iss)
 ;
+
+(defn dsl-node [element parent routes]
+  {:element element :parent parent :routes routes}
+  )
+
+
+; Helper function for parsing the dsl above on def pd
 (defn linearize [expr] expr
   (if (complex? expr)
     (let [[subtress finalexpression] (partition-with vector? expr)]
-        (cons finalexpression (mapcat linearize subtress)))
-    [expr]
+        (cons (dsl-node (first finalexpression) nil []) (mapcat linearize subtress)))
+    [(dsl-node (expr 0) nil [])]
     )
   )
+
 
 
 ;(defmacro defineall [args]

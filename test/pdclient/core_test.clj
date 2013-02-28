@@ -2,16 +2,20 @@
   (:use pdclient.spec-helper
         pdclient.core))
 
+
+
 (spec "can linearize a test in a simple case"
-  (same [[:incidents]] (linearize [:incidents])))
+  (same [{:element :incidents :parent nil :routes []}] (linearize [:incidents])))
 
+; waiting for: we need to get the parent
 (spec "can linearize a composite case"
-  (same [[:incidents] [:subcase]] (linearize [:incidents [:subcase]])))
+  (same [{:element :incidents :parent nil :routes []} {:element :subcase :parent :element :routes []}] (linearize [:incidents [:subcase]])))
 
-(spec "keep arguments of the linearization"
-  (same [[:incidents '(get name)] [:subcase '(put :id subput)]]
+(xspec "keep arguments of the linearization"
+  (same [{:element :incidents :parent nil :routes ['(get name)]}
+         {:element :subcase :parent :element :routes ['(put :id subput)]}]
         (linearize [:incidents '(get name) [:subcase '(put :id subput)]])
     ))
 
-(spec "can define functions that ")
+(xspec "can define functions that ")
 
