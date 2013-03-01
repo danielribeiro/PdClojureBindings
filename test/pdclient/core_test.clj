@@ -10,9 +10,9 @@
 (spec "can linearize a composite case"
   (same [{:element :incidents :parent nil :routes []} {:element :subcase :parent :incidents :routes []}] (linearize [:incidents [:subcase]])))
 
-(xspec "keep arguments of the linearization"
+(spec "keep arguments of the linearization"
   (same [{:element :incidents :parent nil :routes ['(get name)]}
-         {:element :subcase :parent :element :routes ['(put :id subput)]}]
+         {:element :subcase :parent :incidents :routes ['(put :id subput)]}]
         (linearize [:incidents '(get name) [:subcase '(put :id subput)]])
     ))
 

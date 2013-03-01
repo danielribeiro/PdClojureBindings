@@ -84,23 +84,23 @@
 ;
 ;;crud is equal to [(get nil) (get :id nil) (post nil) (put :id nil) (delete :id nil)]
 ;;which equals to [list show create update delete]
-;(def pd
-;  '(
-;     [incidents list update show (get count) (get :id log_entries)]
-;     [alerts list]
-;     [reports (get alerts_per_time) (get incidents_per_time)]
-;     [schedules crud (get :id users ) (post preview) (get :id entries)
-;      [overrides list create delete]]
-;     [users crud (get :id log_entries)
-;      [contact_methods crud]
-;      [notification_rules crud]]
-;     [log_entries list show]
-;     [services crud (put :id disable) (put :id enable) (post :id regenerate_key)
-;        [email-filters create update delete]]
-;     [maintenance_windows crud]
-;   )
-;
-;  )
+(def pd
+  '(
+     [incidents list update show (get count) (get :id log_entries)]
+     [alerts list]
+     [reports (get alerts_per_time) (get incidents_per_time)]
+     [schedules crud (get :id users ) (post preview) (get :id entries)
+      [overrides list create delete]]
+     [users crud (get :id log_entries)
+      [contact_methods crud]
+      [notification_rules crud]]
+     [log_entries list show]
+     [services crud (put :id disable) (put :id enable) (post :id regenerate_key)
+        [email-filters create update delete]]
+     [maintenance_windows crud]
+   )
+
+  )
 ;
 ;
 ;(def iss (first '([incidents list [another-sub crud] update show (get count) [sub iss] (get :id log_entries)])))
@@ -117,6 +117,7 @@
   {:element element :parent parent :routes routes}
   )
 
+(def rest-vec (comp vec rest))
 
 ; Helper function for parsing the dsl above on def pd
 (defn linearize
@@ -125,12 +126,12 @@
     (if (complex? expr)
       (let [[subtress finalexpression] (partition-with vector? expr)
             self (first finalexpression)]
-        (cons (dsl-node self parent []) (mapcat #(linearize % self) subtress)))
-      [(dsl-node (expr 0) parent [])])
+        (cons (dsl-node self parent (rest-vec finalexpression)) (mapcat #(linearize % self) subtress)))
+      [(dsl-node (first expr) parent (rest-vec expr) )])
     )
   )
 
-
+;(map linearize pd)
 
 ;(defmacro defineall [args]
 ;  (cons `do
