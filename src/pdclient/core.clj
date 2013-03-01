@@ -110,8 +110,6 @@
   [(filter pred coll) (remove pred coll)])
 
 (defn complex? [expr] (some vector? expr))
-;(partition-with vector? iss)
-;
 
 (defn dsl-node [element parent routes]
   {:element element :parent parent :routes routes}
@@ -131,7 +129,6 @@
     )
   )
 
-;(map linearize pd)
 
 ;(defmacro defineall [args]
 ;  (cons `do
@@ -142,6 +139,5 @@
 ;  )
 ;
 ;
-;(def osargs '(umalista))
 ;(macroexpand '(defineall ([alerts list]
 ;                            [reports (get alerts_per_time) (get incidents_per_time)]) ))
