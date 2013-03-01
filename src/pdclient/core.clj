@@ -119,11 +119,14 @@
 
 
 ; Helper function for parsing the dsl above on def pd
-(defn linearize [expr] expr
-  (if (complex? expr)
-    (let [[subtress finalexpression] (partition-with vector? expr)]
-        (cons (dsl-node (first finalexpression) nil []) (mapcat linearize subtress)))
-    [(dsl-node (expr 0) nil [])]
+(defn linearize
+  ([expr] (linearize expr nil) )
+  ([expr parent]
+    (if (complex? expr)
+      (let [[subtress finalexpression] (partition-with vector? expr)
+            self (first finalexpression)]
+        (cons (dsl-node self parent []) (mapcat #(linearize % self) subtress)))
+      [(dsl-node (expr 0) parent [])])
     )
   )
 
