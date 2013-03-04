@@ -4,7 +4,6 @@
   (:require [cheshire.core :refer :all])
   )
 (use 'clojure.pprint)
-
 (defn print-it [e]
   (let [o (:object (.getData e ))]
     (prn (:status o) (parse-string (o :body) true))

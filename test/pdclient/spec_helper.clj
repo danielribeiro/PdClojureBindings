@@ -22,8 +22,8 @@
 ; Source: https://gist.github.com/mybuddymichael/4425558
 (defmacro spec
   [name & body]
-  `(clojure.test/deftest ~(arg-to-symbol name) ~@body))
+  `(deftest ~(arg-to-symbol name) ~@body))
 ; ignoring specs
 (defmacro xspec [name-string & body])
 
-(defmacro describe [name & body] `(deftest ~(arg-to-symbol name) ~@body))
+(defmacro describe [name & body] `(do ~@body))

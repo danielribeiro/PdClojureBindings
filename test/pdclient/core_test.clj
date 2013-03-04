@@ -23,12 +23,15 @@
 
 (describe "result simplification functions"
   (spec "can simplify single results"
-    (same {:id 1} (simplify-single-result [:users 1] {:user {:id 1}} ))
-    )
+    (same {:id 1} (simplify-single-result [:users 1] {:user {:id 1}} )))
 
-  (spec "can simplify generic results"
-    (same [{:name "a name"}] (simplify-any [:incidents 2 :log_entries] {:log_entries [{:name "a name"}]}) )
-    )
+  (spec "can simplify generic results, where the result is the last path on the path list"
+    (same [{:name "a name"}] (simplify-any [:incidents 2 :log_entries] {:log_entries [{:name "a name"}] :total 4})))
+
+  (spec "can simplify generic results, where the result only has one key"
+    (same {:name "a name"} (simplify-any [:schedules :preview] {:schedule {:name "a name"}})))
+
+  (spec" will not simplify the result if none of the above aplly"
+    (same {:alerts [] :total_number_of_alerts 0} (simplify-any [:reports :alerts-per-time] {:alerts [] :total_number_of_alerts 0})))
 )
-
 

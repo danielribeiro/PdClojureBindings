@@ -38,7 +38,12 @@
         singular-keyword (singularize-keyword penultimate)]
     (singular-keyword json)))
 
-(defn simplify-any [path-list json] "to be done")
+
+(defn simplify-any [path-list json]
+  (if (= (count json) 1)
+    (first (vals json))
+    (or ((last path-list) json) json)))
+
 
 (defn pdlist
   "usage example: (pdlist [:users])"
