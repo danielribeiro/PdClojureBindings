@@ -63,8 +63,8 @@
   (simplify-single-result path-list (apply pdrequest :put path-list args)))
 
 
-(defn pd-any [path-list & args]
-  (simplify-any path-list (apply pdrequest :put path-list args)))
+(defn pd-any [method path-list & args]
+  (simplify-any path-list (apply pdrequest method path-list args)))
 
 (defn user [id & args] (apply pdshow [:users (name id)] args))
 (defn users [& args] (apply pdlist [:users] args))
