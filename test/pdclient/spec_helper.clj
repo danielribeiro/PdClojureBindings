@@ -20,4 +20,6 @@
 ; ignoring specs
 (defmacro xspec [name-string & body])
 
-(defmacro describe [name & body] `(deftest ~name ~@body))
+;(defmacro describe [name & body] `(deftest ~name ~@body))
+; source: http://stackoverflow.com/questions/1317396/define-a-synonym-for-a-clojure-macro
+(def #^{:macro true} describe #'deftest)
