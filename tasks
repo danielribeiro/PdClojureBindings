@@ -1,0 +1,17 @@
+1. create macro that, given an element of result of linearize, defines the functions in it
+2. create macro that calls the macro above given the whole pd list
+3. authorization function
+4. generalize the simplification functions on the crud methods to handle no crud
+
+
+
+Simplify algo for non crud:
+- if there is only one element: simplify
+- if there is more than one element, simplify with the last part of the url, if possible    (regenerate_key preview count ok, incidents_per_time not so ok )
+
+Simplify algo for crud:
+- list: same as above
+- show: simplify using simplify-single-result
+- update: simplify using simplify-single-result
+- create: pdcreate (->> path-list last singularize-keyword)
+- delete: return nil

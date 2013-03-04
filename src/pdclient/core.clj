@@ -38,6 +38,8 @@
         singular-keyword (singularize-keyword penultimate)]
     (singular-keyword json)))
 
+(defn simplify-any [path-list json] "to be done")
+
 (defn pdlist
   "usage example: (pdlist [:users])"
   [path-list & args]
@@ -54,6 +56,10 @@
 
 (defn pdupdate [path-list & args]
   (simplify-single-result path-list (apply pdrequest :put path-list args)))
+
+
+(defn pd-any [path-list & args]
+  (simplify-any path-list (apply pdrequest :put path-list args)))
 
 (defn user [id & args] (apply pdshow [:users (name id)] args))
 (defn users [& args] (apply pdlist [:users] args))

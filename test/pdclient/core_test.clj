@@ -21,4 +21,14 @@
     (same [{:element :incidents :parent nil :routes [:crud]}] (linearize [:incidents :crud])))
 )
 
+(describe "result simplification functions"
+  (spec "can simplify single results"
+    (same {:id 1} (simplify-single-result [:users 1] {:user {:id 1}} ))
+    )
+
+  (spec "can simplify generic results"
+    (same [{:name "a name"}] (simplify-any [:incidents 2 :log_entries] {:log_entries [{:name "a name"}]}) )
+    )
+)
+
 
