@@ -9,11 +9,18 @@
   (if (nil? args-list) {}
   (into {} (vec (map vec (partition 2 args-list))))))
 
+(def basic-auth-credentials nil)
 
-(def auth {:subdomain "your-subdomain"
-           :user "your-username"
-           :password "your-password"
-           })
+(defn setup-auth [map] (def basic-auth-credentials map))
+
+(defn auth [k]
+    (if basic-auth-credentials
+      (basic-auth-credentials k)
+      (throw (IllegalStateException. "Please call setup-auth with the auth args before using PagerDuty API. Example:
+(setup-auth {:subdomain \"your-subdomain\"
+  :user \"your-username\"
+  :password \"your-password\"})")))
+  )
 
 (defn set-params [method req-map params-map]
   (let [extra-key (if (= method :get) :query-params :form-params)]

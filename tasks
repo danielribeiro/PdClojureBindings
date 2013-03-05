@@ -1,7 +1,6 @@
 1. create macro that, given an element of result of linearize, defines the functions in it
 2. create macro that calls the macro above given the whole pd list
-3. authorization function
-4. generalize the simplification functions on the crud methods to handle no crud
+3. generalize the simplification functions on the crud methods to handle no crud
 
 
 
