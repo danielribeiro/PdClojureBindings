@@ -73,6 +73,13 @@
 (defn pd-any [method path-list & args]
   (simplify-any path-list (apply pdrequest method path-list args)))
 
+;(defn pd-req [method route simplify-fn & ids]
+;  (simplify-fn )
+;  )
+
+(defn path-list-of [routespec])
+
+
 (defn user [id & args] (apply pdshow [:users (name id)] args))
 (defn users [& args] (apply pdlist [:users] args))
 (defn incidents [& args] (apply pdlist [:incidents] args))

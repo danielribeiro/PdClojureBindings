@@ -7,7 +7,7 @@
 
 
 
-(defn- name-to-symbol [name]
+(defn name-to-symbol [name]
   (-> name
     st/lower-case
     (st/replace #"\W" "-")

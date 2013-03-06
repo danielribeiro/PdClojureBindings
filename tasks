@@ -1,4 +1,4 @@
-1. create macro that, given an element of result of linearize, defines the functions in it
+1. create function that creates the routes specs given the linearization
 2. create macro that calls the macro above given the whole pd list
 3. generalize the simplification functions on the crud methods to handle no crud
 

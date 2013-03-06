@@ -16,10 +16,13 @@
            {:element :subcase :parent :incidents :routes ['(put :id subput)]}]
           (linearize [:incidents '(get name) [:subcase '(put :id subput)]])
       ))
-
-  (spec "can handle crud routes"
-    (same [{:element :incidents :parent nil :routes [:crud]}] (linearize [:incidents :crud])))
 )
+
+(describe route-specs
+  (spec ""
+    (same [{:method :get :id-count 0 }] (routes-of {:element :incidents :parent nil :routes ['(get name)]} )))
+
+  )
 
 (describe "result simplification functions"
   (spec "can simplify single results"
@@ -34,4 +37,3 @@
   (spec" will not simplify the result if none of the above aplly"
     (same {:alerts [] :total_number_of_alerts 0} (simplify-any [:reports :alerts-per-time] {:alerts [] :total_number_of_alerts 0})))
 )
-
