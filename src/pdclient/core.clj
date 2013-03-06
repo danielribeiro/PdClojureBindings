@@ -77,7 +77,26 @@
 ;  (simplify-fn )
 ;  )
 
-(defn path-list-of [routespec])
+(defn parent-list [route]  (remove nil? [(:element route) (:parent route)]))
+
+(defn interleave+ [vec1 vec2]
+  "Like interleave, but appends all the remaining elements to the returning vector. Always returns a vector"
+  (let [ret (vec (interleave vec1 vec2))
+        size1 (count vec1)
+        size2 (count vec2)]
+    (cond
+      (< size1 size2) (concat ret (subvec vec2 size1))
+      (> size1 size2) (concat ret (subvec vec1 size2))
+      :else ret
+      )))
+
+(defn spec-name [route-spec] (nth (:route-spec route-spec) 1))
+
+(defn path-list-of [routespec idlist]
+  (let [parents (->> routespec :route parent-list vec)]
+    (interleave+ (conj parents (spec-name routespec)) idlist)
+    )
+  )
 
 
 (defn user [id & args] (apply pdshow [:users (name id)] args))

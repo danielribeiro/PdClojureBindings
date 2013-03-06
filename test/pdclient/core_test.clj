@@ -19,8 +19,9 @@
 )
 
 (describe route-specs
-  (spec ""
-    (same [{:method :get :id-count 0 }] (routes-of {:element :incidents :parent nil :routes ['(get name)]} )))
+  (spec "path-list-of can generate a path list out of a route and a id list"
+    (same [:incidents 42 'name] (path-list-of {:route-spec '(get name) :route {:element :incidents :parent nil :routes ['(get name)]}} [42]))
+    )
 
   )
 
