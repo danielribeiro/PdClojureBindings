@@ -33,6 +33,10 @@
   (spec "can create path-list out of basic crud route: show"
     (same [:users 23]
       (path-list-of {:route-spec 'show :route {:element :users :parent nil :routes ['show]}} [23])))
+
+  (spec "can cout how many id arguments a route spec needs"
+    (same 2 (number-of-arguments {:route-spec 'show :route {:element :contact_methods :parent :users :routes ['show]}} ))
+    )
   )
 
 (describe "result simplification functions"

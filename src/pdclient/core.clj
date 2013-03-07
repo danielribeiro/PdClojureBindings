@@ -112,12 +112,23 @@
     (interleave+ (conj? parents (spec-name routespec)) idlist)
     ))
 
+(defn- boolean-to-int [bol] (if bol 1 0))
+
+(defn number-of-arguments [routespec]
+  (let [route (:route-spec routespec)
+        has-id? (or (#{'show 'update 'delete} route)
+                    (and (seq? route) (= (count route) 3)))]
+    (reduce + (map boolean-to-int [has-id? (->> routespec :route :parent)]))))
+
+
 (def base-path-method-map
-  {:list 'get
-   :show 'get
-   :create 'post
-   :update 'put
-   :delete 'delete})
+  {'list 'get
+   'show 'get
+   'create 'post
+   'update 'put
+   'delete 'delete})
+
+(def crud-routes (keys base-path-method-map))
 
 (defn route-specs [route]
   (map #(args-to-map [:route-spec % :route route]) (:routes route)))
