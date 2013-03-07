@@ -26,7 +26,7 @@
   (let [extra-key (if (= method :get) :query-params :form-params)]
     (assoc req-map extra-key params-map)))
 
-(defn pdrequest [method path-list & args]
+(defn pdrequest [method path-list args]
   (:body ((resolve (symbol "clj-http.client" (name method)))
            (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map name path-list)) )
     (set-params method {:basic-auth [(auth :user) (auth :password)]
@@ -70,13 +70,6 @@
   (simplify-single-result path-list (apply pdrequest :put path-list args)))
 
 
-(defn pd-any [method path-list & args]
-  (simplify-any path-list (apply pdrequest method path-list args)))
-
-;(defn pd-req [method route simplify-fn & ids]
-;  (simplify-fn )
-;  )
-
 (def compact (partial remove nil?))
 
 (defn- parent-list [route]  (compact [(:parent route) (:element route)]))
@@ -112,13 +105,12 @@
     (interleave+ (conj? parents (spec-name routespec)) idlist)
     ))
 
-(defn- boolean-to-int [bol] (if bol 1 0))
 
 (defn number-of-arguments [routespec]
   (let [route (:route-spec routespec)
         has-id? (or (#{'show 'update 'delete} route)
                     (and (seq? route) (= (count route) 3)))]
-    (reduce + (map boolean-to-int [has-id? (->> routespec :route :parent)]))))
+    (count (filter boolean [has-id? (->> routespec :route :parent)]))))
 
 
 (def base-path-method-map
@@ -133,7 +125,33 @@
 (defn route-specs [route]
   (map #(args-to-map [:route-spec % :route route]) (:routes route)))
 
-(defn user [id & args] (apply pdshow [:users (name id)] args))
+; Deprecated by pd-api
+(defn pd-any [method path-list & args]
+  (simplify-any path-list (pdrequest method path-list args)))
+
+(defn- get-simplify-function [route-spec]) ;TODO
+; Case of show: simplify-single-result
+(defn- get-method-of [route-spec]) ; TODO
+(defn- split-args [route-spec argslist]) ; TODO
+
+
+(defn pd-api [route-spec argslist]
+  (let [simplify-fn (get-simplify-function route-spec)
+        method (get-method-of route-spec)
+        [ids kvs] (split-args route-spec argslist)
+        path-list (path-list-of route-spec ids)
+        ]
+    (simplify-fn path-list (pdrequest method path-list kvs)))
+  )
+
+(defn user [& args]
+  (pd-api
+    {:route-spec 'show :route {:element :users :parent :nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
+    args
+    )
+  )
+
+;(defn user [id & args] (apply pdshow [:users (name id)] args))
 (defn users [& args] (apply pdlist [:users] args))
 (defn incidents [& args] (apply pdlist [:incidents] args))
 (defn schedules [& args] (apply pdlist [:schedules] args))
