@@ -55,19 +55,19 @@
 (defn pdlist
   "usage example: (pdlist [:users])"
   [path-list & args]
-  ((last path-list) (apply pdrequest :get path-list args)))
+  ((last path-list) (pdrequest :get path-list args)))
 
 (defn pdshow [path-list & args]
-  (simplify-single-result path-list (apply pdrequest :get path-list args)))
+  (simplify-single-result path-list (pdrequest :get path-list args)))
 
 (defn pdcreate [path-list & args]
-  ((->> path-list last singularize-keyword) (apply pdrequest :post path-list args)))
+  ((->> path-list last singularize-keyword) (pdrequest :post path-list args)))
 
 (defn pddelete [path-list & args]
-  (apply pdrequest :delete path-list args))
+  (pdrequest :delete path-list args))
 
 (defn pdupdate [path-list & args]
-  (simplify-single-result path-list (apply pdrequest :put path-list args)))
+  (simplify-single-result path-list (pdrequest :put path-list args)))
 
 
 (def compact (partial remove nil?))
@@ -129,16 +129,23 @@
 (defn pd-any [method path-list & args]
   (simplify-any path-list (pdrequest method path-list args)))
 
-(defn- get-simplify-function [route-spec]) ;TODO
+(defn- get-simplify-function [route-spec]
+  (if (= 'show (:route-spec route-spec))
+    simplify-single-result
+    (throw (IllegalStateException. "to be implemented"))
+    )
+  ) ;TODO
 ; Case of show: simplify-single-result
-(defn- get-method-of [route-spec]) ; TODO
-(defn- split-args [route-spec argslist]) ; TODO
-
+(defn- get-method-of [route-spec]
+  (let [spec (:route-spec route-spec)]
+    (if (symbol? spec)
+      (base-path-method-map spec)
+      (first spec))))
 
 (defn pd-api [route-spec argslist]
   (let [simplify-fn (get-simplify-function route-spec)
         method (get-method-of route-spec)
-        [ids kvs] (split-args route-spec argslist)
+        [ids kvs] (split-at (number-of-arguments route-spec) argslist )
         path-list (path-list-of route-spec ids)
         ]
     (simplify-fn path-list (pdrequest method path-list kvs)))
@@ -146,7 +153,7 @@
 
 (defn user [& args]
   (pd-api
-    {:route-spec 'show :route {:element :users :parent :nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
+    {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
     args
     )
   )
