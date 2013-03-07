@@ -20,9 +20,19 @@
 
 (describe route-specs
   (spec "path-list-of can generate a path list out of a route and a id list"
-    (same [:incidents 42 'name] (path-list-of {:route-spec '(get name) :route {:element :incidents :parent nil :routes ['(get name)]}} [42]))
-    )
+    (same [:incidents 42 'name] (path-list-of {:route-spec '(get name) :route {:element :incidents :parent nil :routes ['(get name)]}} [42])))
 
+  (spec "path-list-of can generate a path list out of a route and a id list, given the route has parent"
+    (same [:users 42 :contact_methods 266 'name]
+      (path-list-of {:route-spec '(get name) :route {:element :contact_methods :parent :users :routes ['(get name)]}} [42 266])))
+
+  (spec "can create path-list out of basic crud route: list"
+    (same [:users 23 :contact_methods]
+      (path-list-of {:route-spec 'list :route {:element :contact_methods :parent :users :routes ['list]}} [23])))
+
+  (spec "can create path-list out of basic crud route: show"
+    (same [:users 23]
+      (path-list-of {:route-spec 'show :route {:element :users :parent nil :routes ['show]}} [23])))
   )
 
 (describe "result simplification functions"

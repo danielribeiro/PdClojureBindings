@@ -36,7 +36,7 @@
   (p (apply grab json args))
   )
 ;
-(pgrab (users) :id :email)
+;(pgrab (users) :id :email)
 ;
 ;(user-delete :PGQFWUS)
 ;(pgrab (users) :id :email)

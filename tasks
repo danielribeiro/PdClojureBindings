@@ -3,7 +3,6 @@
 3. generalize the simplification functions on the crud methods to handle no crud
 
 
-
 Simplify algo for non crud:
 - if there is only one element: simplify
 - if there is more than one element, simplify with the last part of the url, if possible    (regenerate_key preview count ok, incidents_per_time not so ok )
