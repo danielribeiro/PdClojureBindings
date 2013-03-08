@@ -37,7 +37,7 @@
 
 (defn singularize [str] (subs str 0 (- (count str) 1 )))
 
-(defn singularize-keyword [kw]
+(defn singularize-keyword "Also works for symbols" [kw]
   (->> kw name singularize keyword))
 
 (defn simplify-single-result [path-list json]
@@ -87,8 +87,8 @@
       :else ret
       )))
 
-(defn- spec-name [route-spec]
-  (let [spec (:route-spec route-spec)]
+(defn- spec-name [routespec]
+  (let [spec (:route-spec routespec)]
     (if (symbol? spec)
       nil
       (last spec)))
@@ -129,44 +129,27 @@
 (defn pd-any [method path-list & args]
   (simplify-any path-list (pdrequest method path-list args)))
 
-(defn- get-simplify-function [route-spec]
-  (if (= 'show (:route-spec route-spec))
+(defn- get-simplify-function [routespec]
+  (if (= 'show (:route-spec routespec))
     simplify-single-result
-    (throw (IllegalStateException. "to be implemented"))
+    (throw (IllegalStateException. "to be implemented"))    ;TODO do other cases
     )
-  ) ;TODO
-; Case of show: simplify-single-result
-(defn- get-method-of [route-spec]
-  (let [spec (:route-spec route-spec)]
+  )
+
+(defn- get-method-of [routespec]
+  (let [spec (:route-spec routespec)]
     (if (symbol? spec)
       (base-path-method-map spec)
       (first spec))))
 
-(defn pd-api [route-spec argslist]
-  (let [simplify-fn (get-simplify-function route-spec)
-        method (get-method-of route-spec)
-        [ids kvs] (split-at (number-of-arguments route-spec) argslist )
-        path-list (path-list-of route-spec ids)
+(defn pd-api [routespec argslist]
+  (let [simplify-fn (get-simplify-function routespec)
+        method (get-method-of routespec)
+        [ids kvs] (split-at (number-of-arguments routespec) argslist )
+        path-list (path-list-of routespec ids)
         ]
     (simplify-fn path-list (pdrequest method path-list kvs)))
   )
-
-(defn user [& args]
-  (pd-api
-    {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
-    args
-    )
-  )
-
-;(defn user [id & args] (apply pdshow [:users (name id)] args))
-(defn users [& args] (apply pdlist [:users] args))
-(defn incidents [& args] (apply pdlist [:incidents] args))
-(defn schedules [& args] (apply pdlist [:schedules] args))
-(defn services [& args] (apply pdlist [:services] args))
-(defn maintenance_windows [& args] (apply pdlist [:maintenance_windows] args))
-(defn user-new [& args] (apply pdcreate [:users] args))
-(defn user-delete [id & args] (apply pddelete [:users (name id)] args))
-(defn user-update [id & args] (apply pdupdate [:users (name id)] args))
 
 (defn grab
   "Helper from grabing a few keys from json output. Works if json is an array or an object
@@ -231,6 +214,36 @@
       [(dsl-node (first expr) parent (rest-vec expr) )])
     )
   )
+
+
+(defn- route-to-function-name [routespec] ;TODO: make it work in general case
+  (->> routespec :route :element name singularize symbol)
+  )
+
+(defmacro define-pd-api [routespec]
+  (let [{spec :route-spec route :route} routespec]
+      `(defn ~(route-to-function-name routespec) [& args#] (pd-api ~routespec args#))
+    )
+  )
+
+(define-pd-api {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}})
+
+;(defn user [& args]
+;  (pd-api
+;    {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
+;    args
+;    )
+;  )
+;(defn user [id & args] (apply pdshow [:users (name id)] args))
+(defn users [& args] (apply pdlist [:users] args))
+(defn incidents [& args] (apply pdlist [:incidents] args))
+(defn schedules [& args] (apply pdlist [:schedules] args))
+(defn services [& args] (apply pdlist [:services] args))
+(defn maintenance_windows [& args] (apply pdlist [:maintenance_windows] args))
+(defn user-new [& args] (apply pdcreate [:users] args))
+(defn user-delete [id & args] (apply pddelete [:users (name id)] args))
+(defn user-update [id & args] (apply pdupdate [:users (name id)] args))
+
 
 
 ;(defmacro defineall [args]

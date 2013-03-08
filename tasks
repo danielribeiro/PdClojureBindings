@@ -1,6 +1,6 @@
-1. create function that creates the routes specs given the linearization
-2. create macro that calls the macro above given the whole pd list
-3. generalize the simplification functions on the crud methods to handle no crud
+1. create macro that calls the macro above given the whole pd list
+2. generalize the simplification functions on the crud methods to handle no crud
+3. clojars and readme
 
 
 Simplify algo for non crud:
@@ -13,3 +13,11 @@ Simplify algo for crud:
 - update: simplify using simplify-single-result
 - create: pdcreate (->> path-list last singularize-keyword)
 - delete: return nil
+
+
+names
+- list: element
+- show: singular element
+- update: singular element -update
+- create: singular element -new
+- delete: singular element -delete
