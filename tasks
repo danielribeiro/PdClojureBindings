@@ -1,6 +1,7 @@
 1. create macro that calls the macro above given the whole pd list
 2. generalize the simplification functions on the crud methods to handle no crud
-3. clojars and readme
+3. events api
+4. clojars and readme
 
 
 Simplify algo for non crud:
@@ -15,9 +16,12 @@ Simplify algo for crud:
 - delete: return nil
 
 
-names
+names: crud case
 - list: element
 - show: singular element
 - update: singular element -update
 - create: singular element -new
 - delete: singular element -delete
+
+names: non crud case
+element + first(route-spec)

@@ -216,17 +216,71 @@
   )
 
 
-(defn- route-to-function-name [routespec] ;TODO: make it work in general case
-  (->> routespec :route :element name singularize symbol)
-  )
+(defn- symbol-route-to-function-name [routespec]
+  (let [base-path-suffix {'list "s"
+         'show ""
+         'create "-new"
+         'update "-update"
+         'delete "-delete"}
+         base (->> routespec :route :element name singularize)
+        suffix (->> routespec :route-spec base-path-suffix)]
+    (symbol (str base suffix))))
+
+(defn- any-route-to-function-name [routespec]
+  (let [base (->> routespec :route :element name singularize)
+        suffix (->> routespec :route-spec last)
+        plural-str (if (= (->> routespec :route-spec count) 3) "" "s")
+        ]
+    (symbol (str base plural-str "-" suffix))))
+
+(defn- route-to-function-name [routespec]
+  (if (list? (:route-spec routespec))
+    (any-route-to-function-name routespec)
+    (symbol-route-to-function-name routespec)
+    )
+)
 
 (defmacro define-pd-api [routespec]
-  (let [{spec :route-spec route :route} routespec]
-      `(defn ~(route-to-function-name routespec) [& args#] (pd-api ~routespec args#))
-    )
+  `(defn ~(route-to-function-name routespec) [& args#] (pd-api ~routespec args#))
   )
 
-(define-pd-api {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}})
+
+;(list? '(get count))
+;(list? 'show)
+
+
+(defmacro ev [f expr] `(~f (quote ~expr)))
+
+(let [vars (->> (ev linearize [incidents list update show (get count) (get :id log_entries)]) first route-specs)]
+  (map (fn [x]
+         (do
+           (prn x)
+            (println (route-to-function-name x))
+           )
+         ) vars)
+
+  )
+
+(prn (ev route-to-function-name {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}}))
+(prn (ev route-to-function-name {:route-spec show :route {:element :users :parent nil :routes [show create update delete list (get :id log_entries)]}}))
+(define-pd-api {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}})
+(define-pd-api {:route-spec show :route {:element :users :parent nil :routes [show create update delete list (get :id log_entries)]}})
+
+(macroexpand `(define-pd-api {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}}))
+
+;(prn (any-route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}}  ))
+(ev define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )
+(prn (macroexpand `(define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )))
+(prn (route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}}))
+;(prn (route-to-function-name  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}))
+;(define-pd-api  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}} )
+(prn (macroexpand `(define-pd-api  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}} )))
+
+;(route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )
+
+;(define-pd-api {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}})
+
+;(define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}})
 
 ;(defn user [& args]
 ;  (pd-api
