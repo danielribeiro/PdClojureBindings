@@ -51,24 +51,38 @@
     (first (vals json))
     (or ((last path-list) json) json)))
 
+(defn simplitfy-list [path-list json]
+   ((last path-list) json))
 
+(defn simplitfy-create [path-list json]
+  ((->> path-list last singularize-keyword) json)
+  )
+
+; DEPRECATED
 (defn pdlist
   "usage example: (pdlist [:users])"
   [path-list & args]
-  ((last path-list) (pdrequest :get path-list args)))
+  (simplitfy-list path-list (pdrequest :get path-list args)))
 
 (defn pdshow [path-list & args]
   (simplify-single-result path-list (pdrequest :get path-list args)))
 
 (defn pdcreate [path-list & args]
-  ((->> path-list last singularize-keyword) (pdrequest :post path-list args)))
+  (simplitfy-create path-list (pdrequest :post path-list args)))
 
 (defn pddelete [path-list & args]
   (pdrequest :delete path-list args))
 
 (defn pdupdate [path-list & args]
   (simplify-single-result path-list (pdrequest :put path-list args)))
+; /DEPRECATED
 
+(def simplify-case
+    {'list simplitfy-list
+     'show simplify-single-result
+     'create simplitfy-create
+     'update simplify-single-result
+     'delete (constantly nil)})
 
 (def compact (partial remove nil?))
 
@@ -112,7 +126,6 @@
                     (and (seq? route) (= (count route) 3)))]
     (count (filter boolean [has-id? (->> routespec :route :parent)]))))
 
-
 (def base-path-method-map
   {'list 'get
    'show 'get
@@ -122,17 +135,13 @@
 
 (def crud-routes (keys base-path-method-map))
 
-(defn route-specs [route]
+(defn route-specs [route]   ;;TODO: handle crud special case
   (map #(args-to-map [:route-spec % :route route]) (:routes route)))
 
-; Deprecated by pd-api
-(defn pd-any [method path-list & args]
-  (simplify-any path-list (pdrequest method path-list args)))
-
 (defn- get-simplify-function [routespec]
-  (if (= 'show (:route-spec routespec))
-    simplify-single-result
-    (throw (IllegalStateException. "to be implemented"))    ;TODO do other cases
+  (if (list? (:route-spec routespec))
+    simplify-any
+    (simplify-case (:route-spec routespec))
     )
   )
 
@@ -163,11 +172,6 @@
     (map #(select-keys % args) json)
     ))
 
-;(distinct (map :status (get-in i [:body :incidents])))
-;(get-in i [:body :limit])
-;(pprint (:body i))
-;
-;
 ;;crud is equal to [(get nil) (get :id nil) (post nil) (put :id nil) (delete :id nil)]
 ;;which equals to [list show create update delete]
 (def pd
@@ -187,10 +191,6 @@
    )
 
   )
-;
-;
-;(def iss (first '([incidents list [another-sub crud] update show (get count) [sub iss] (get :id log_entries)])))
-;
 
 (defn partition-with [pred coll]
   [(filter pred coll) (remove pred coll)])
@@ -237,58 +237,26 @@
   (if (list? (:route-spec routespec))
     (any-route-to-function-name routespec)
     (symbol-route-to-function-name routespec)
-    )
-)
+    ))
+
 
 (defmacro define-pd-api [routespec]
-  `(defn ~(route-to-function-name routespec) [& args#] (pd-api ~routespec args#))
+  `(defn ~(route-to-function-name routespec) [& args#] (pd-api (quote ~routespec) args#))
   )
 
 
-;(list? '(get count))
-;(list? 'show)
 
 
-(defmacro ev [f expr] `(~f (quote ~expr)))
+;; doc helper.
+(defn printroutes []
+  (let [vars (mapcat route-specs (mapcat linearize pd))]
+    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
+  ))
 
-(let [vars (->> (ev linearize [incidents list update show (get count) (get :id log_entries)]) first route-specs)]
-  (map (fn [x]
-         (do
-           (prn x)
-            (println (route-to-function-name x))
-           )
-         ) vars)
 
-  )
-
-(prn (ev route-to-function-name {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}}))
-(prn (ev route-to-function-name {:route-spec show :route {:element :users :parent nil :routes [show create update delete list (get :id log_entries)]}}))
-(define-pd-api {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}})
+(define-pd-api {:route-spec (get count) :route {:element incidents :parent nil :routes [(get count)]}} )
 (define-pd-api {:route-spec show :route {:element :users :parent nil :routes [show create update delete list (get :id log_entries)]}})
 
-(macroexpand `(define-pd-api {:route-spec (get count) :route {:element :incidents :parent nil :routes [(get count)]}}))
-
-;(prn (any-route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}}  ))
-(ev define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )
-(prn (macroexpand `(define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )))
-(prn (route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}}))
-;(prn (route-to-function-name  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}))
-;(define-pd-api  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}} )
-(prn (macroexpand `(define-pd-api  {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}} )))
-
-;(route-to-function-name {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}} )
-
-;(define-pd-api {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}})
-
-;(define-pd-api {:route-spec '(get count) :route {:element :incidents :parent nil :routes ['(get count)]}})
-
-;(defn user [& args]
-;  (pd-api
-;    {:route-spec 'show :route {:element :users :parent nil :routes ['show 'create' 'update 'delete 'list '(get :id log_entries)]}}
-;    args
-;    )
-;  )
-;(defn user [id & args] (apply pdshow [:users (name id)] args))
 (defn users [& args] (apply pdlist [:users] args))
 (defn incidents [& args] (apply pdlist [:incidents] args))
 (defn schedules [& args] (apply pdlist [:schedules] args))
@@ -299,7 +267,7 @@
 (defn user-update [id & args] (apply pdupdate [:users (name id)] args))
 
 
-
+; precursor of the creator of all functions
 ;(defmacro defineall [args]
 ;  (cons `do
 ;    (map (fn [a]
@@ -308,6 +276,3 @@
 ;      ))
 ;  )
 ;
-;
-;(macroexpand '(defineall ([alerts list]
-;                            [reports (get alerts_per_time) (get incidents_per_time)]) ))
