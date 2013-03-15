@@ -37,6 +37,20 @@
   (spec "can cout how many id arguments a route spec needs"
     (same 2 (number-of-arguments {:route-spec 'show :route {:element :contact_methods :parent :users :routes ['show]}} ))
     )
+
+  (spec "can create route specs"
+    (same [{:route-spec 'show :route {:element :users :parent nil :routes ['show]}}] (route-specs {:element :users :parent nil :routes ['show]}))
+    )
+  (spec "can create route specs for crud"
+    (let [r {:element :users :parent nil :routes ['crud]}]
+      (same [{:route-spec 'list :route r}
+             {:route-spec 'show :route r}
+             {:route-spec 'create :route r}
+             {:route-spec 'udpate :route r}
+             {:route-spec 'delete :route r}
+             ] (route-specs r ))
+    ))
+
   )
 
 (describe "result simplification functions"
