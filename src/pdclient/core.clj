@@ -135,11 +135,12 @@
 
 (def crud-routes (keys base-path-method-map))
 
-;(defn- route-to-map [route]
-;  )
+(defn- extract-routes [route spec]
+  [(args-to-map [:route-spec spec :route route])]
+  )
 
 (defn route-specs [route]   ;;TODO: handle crud special case
-  (map #(args-to-map [:route-spec % :route route]) (:routes route)))
+  (mapcat (partial extract-routes route) (:routes route)))
 
 (defn- get-simplify-function [routespec]
   (if (list? (:route-spec routespec))
