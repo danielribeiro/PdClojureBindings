@@ -46,7 +46,7 @@
       (same  #{{:route-spec 'list :route r}
              {:route-spec 'show :route r}
              {:route-spec 'create :route r}
-             {:route-spec 'udpate :route r}
+             {:route-spec 'update :route r}
              {:route-spec 'delete :route r}
                } (->> r route-specs set))
     ))
