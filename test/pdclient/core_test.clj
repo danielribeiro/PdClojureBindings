@@ -43,12 +43,12 @@
     )
   (spec "can create route specs for crud"
     (let [r {:element :users :parent nil :routes ['crud]}]
-      (same [{:route-spec 'list :route r}
+      (same  #{{:route-spec 'list :route r}
              {:route-spec 'show :route r}
              {:route-spec 'create :route r}
              {:route-spec 'udpate :route r}
              {:route-spec 'delete :route r}
-             ] (route-specs r ))
+               } (->> r route-specs set))
     ))
 
   )

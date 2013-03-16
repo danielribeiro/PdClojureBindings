@@ -136,8 +136,11 @@
 (def crud-routes (keys base-path-method-map))
 
 (defn- extract-routes [route spec]
-  [(args-to-map [:route-spec spec :route route])]
-  )
+  (if (= 'crud spec)
+    (map #(args-to-map [:route-spec % :route route]) crud-routes)
+    [(args-to-map [:route-spec spec :route route])]
+  ))
+
 
 (defn route-specs [route]   ;;TODO: handle crud special case
   (mapcat (partial extract-routes route) (:routes route)))
