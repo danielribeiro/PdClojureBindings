@@ -139,9 +139,7 @@
 ;  )
 
 (defn route-specs [route]   ;;TODO: handle crud special case
-( do (prn route)
   (map #(args-to-map [:route-spec % :route route]) (:routes route)))
-)
 
 (defn- get-simplify-function [routespec]
   (if (list? (:route-spec routespec))
