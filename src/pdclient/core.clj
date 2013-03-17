@@ -222,20 +222,17 @@
 
 ; Create the methods
 
-;(defmacro defineall [form]
-;  (cons `do
-;    (map (fn [routespec]
-;           `(define-pd-api ~routespec))
-;      (mapcat route-specs (mapcat linearize (quote form)))
-;
-;      )
-;  ) )
-
-;(defmacro defineall [form]
-;     (def pd (mapcat route-specs (mapcat linearize (quote ~form)))))
-
 (defmacro defineall [form]
-  `(def pd (quote ~form)))
+  (cons `do
+    (map (fn [routespec]
+           `(define-pd-api ~routespec))
+      (mapcat route-specs (mapcat linearize form))
+
+      )
+  ) )
+
+;(defmacro defineall [form]
+;     `(def pd (mapcat route-specs (mapcat linearize (quote ~form)))))
 
 
 (defineall (
@@ -257,5 +254,3 @@
 
 ; precursor of the creator of all functions
 
-
-(prn pd)
