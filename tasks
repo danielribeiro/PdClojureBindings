@@ -2,6 +2,7 @@
 2. generalize the simplification functions on the crud methods to handle no crud
 3. events api
 4. clojars and readme
+5. allow hashes, not only ids
 
 
 Simplify algo for non crud:
