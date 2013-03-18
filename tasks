@@ -1,8 +1,6 @@
-1. create macro that calls the macro above given the whole pd list
-2. generalize the simplification functions on the crud methods to handle no crud
-3. events api
-4. clojars and readme
-5. allow hashes, not only ids
+1. allow hashes, not only ids
+2. events api
+3. clojars and readme
 
 
 Simplify algo for non crud:

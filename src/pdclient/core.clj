@@ -195,18 +195,13 @@
 (defmacro define-pd-api [routespec]
   `(defn ~(route-to-function-name routespec) [& args#] (pd-api (quote ~routespec) args#)))
 
-;; doc helper.
-(defn- printroutes-internal [form]
-  (let [vars (mapcat route-specs (mapcat linearize form))]
-    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
-  ))
 
 ; Create the methods
 (defmacro defineall [form]
   (cons `do
     (conj (map (fn [routespec] `(define-pd-api ~routespec))
             (mapcat route-specs (mapcat linearize form)))
-      `(defn printroutes [] (printroutes-internal (quote ~form)) ))))
+      `(def pd-routes (quote ~form)))))
 
 (defineall (
              [incidents list update show (get count) (get :id log_entries)]
@@ -221,4 +216,11 @@
              [services crud (put :id disable) (put :id enable) (post :id regenerate_key)
               [email-filters create update delete]]
              [maintenance_windows crud]
-             ) )
+             ))
+
+;; doc helper.
+(defn printroutes []
+  (let [vars (mapcat route-specs (mapcat linearize pd-routes))]
+    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
+    ))
+
