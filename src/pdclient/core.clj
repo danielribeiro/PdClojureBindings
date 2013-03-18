@@ -1,9 +1,6 @@
 (ns pdclient.core
   (:require [clj-http.client])
-  (:use [clojure.string :only [join]])
-  )
-
-(use 'clojure.pprint)
+  (:use [clojure.string :only [join]]))
 
 (defn args-to-map [args-list]
   (if (nil? args-list) {}
@@ -32,8 +29,7 @@
     (set-params method {:basic-auth [(auth :user) (auth :password)]
      :content-type :json
      :accept :json
-     :as :json} (args-to-map args))
-    )))
+     :as :json} (args-to-map args)))))
 
 (defn singularize [str] (subs str 0 (- (count str) 1 )))
 
@@ -55,8 +51,7 @@
    ((last path-list) json))
 
 (defn simplitfy-create [path-list json]
-  ((->> path-list last singularize-keyword) json)
-  )
+  ((->> path-list last singularize-keyword) json))
 
 (def simplify-case
     {'list simplitfy-list
@@ -79,8 +74,7 @@
     (cond
       (< size1 size2) (concat-vec ret (subvec vec2 size1))
       (> size1 size2) (concat-vec ret (subvec vec1 size2))
-      :else ret
-      )))
+      :else ret)))
 
 (defn- spec-name [routespec]
   (let [spec (:route-spec routespec)]
@@ -97,8 +91,7 @@
 
 (defn path-list-of [routespec idlist]
   (let [parents (->> routespec :route parent-list vec)]
-    (interleave+ (conj? parents (spec-name routespec)) idlist)
-    ))
+    (interleave+ (conj? parents (spec-name routespec)) idlist)))
 
 
 (defn number-of-arguments [routespec]
@@ -128,9 +121,7 @@
 (defn- get-simplify-function [routespec]
   (if (list? (:route-spec routespec))
     simplify-any
-    (simplify-case (:route-spec routespec))
-    )
-  )
+    (simplify-case (:route-spec routespec))))
 
 (defn- get-method-of [routespec]
   (let [spec (:route-spec routespec)]
@@ -144,8 +135,7 @@
         [ids kvs] (split-at (number-of-arguments routespec) argslist )
         path-list (path-list-of routespec ids)
         ]
-    (simplify-fn path-list (pdrequest method path-list kvs)))
-  )
+    (simplify-fn path-list (pdrequest method path-list kvs))))
 
 (defn grab
   "Helper from grabing a few keys from json output. Works if json is an array or an object
@@ -156,8 +146,7 @@
   [json & args]
   (if (map? json)
     (select-keys json args)
-    (map #(select-keys % args) json)
-    ))
+    (map #(select-keys % args) json)))
 
 (defn partition-with [pred coll]
   [(filter pred coll) (remove pred coll)])
@@ -165,8 +154,7 @@
 (defn complex? [expr] (some vector? expr))
 
 (defn dsl-node [element parent routes]
-  {:element element :parent parent :routes routes}
-  )
+  {:element element :parent parent :routes routes})
 
 (def rest-vec (comp vec rest))
 
@@ -178,9 +166,7 @@
       (let [[subtress finalexpression] (partition-with vector? expr)
             self (first finalexpression)]
         (cons (dsl-node self parent (rest-vec finalexpression)) (mapcat #(linearize % self) subtress)))
-      [(dsl-node (first expr) parent (rest-vec expr) )])
-    )
-  )
+      [(dsl-node (first expr) parent (rest-vec expr) )])))
 
 
 (defn- symbol-route-to-function-name [routespec]
@@ -203,37 +189,24 @@
 (defn- route-to-function-name [routespec]
   (if (list? (:route-spec routespec))
     (any-route-to-function-name routespec)
-    (symbol-route-to-function-name routespec)
-    ))
+    (symbol-route-to-function-name routespec)))
 
 
 (defmacro define-pd-api [routespec]
-  `(defn ~(route-to-function-name routespec) [& args#] (pd-api (quote ~routespec) args#))
-  )
-
-
-
+  `(defn ~(route-to-function-name routespec) [& args#] (pd-api (quote ~routespec) args#)))
 
 ;; doc helper.
-;(defn printroutes []
-;  (let [vars (mapcat route-specs (mapcat linearize pd))]
-;    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
-;  ))
+(defn- printroutes-internal [form]
+  (let [vars (mapcat route-specs (mapcat linearize form))]
+    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
+  ))
 
 ; Create the methods
-
 (defmacro defineall [form]
   (cons `do
-    (map (fn [routespec]
-           `(define-pd-api ~routespec))
-      (mapcat route-specs (mapcat linearize form))
-
-      )
-  ) )
-
-;(defmacro defineall [form]
-;     `(def pd (mapcat route-specs (mapcat linearize (quote ~form)))))
-
+    (conj (map (fn [routespec] `(define-pd-api ~routespec))
+            (mapcat route-specs (mapcat linearize form)))
+      `(defn printroutes [] (printroutes-internal (quote ~form)) ))))
 
 (defineall (
              [incidents list update show (get count) (get :id log_entries)]
@@ -249,8 +222,3 @@
               [email-filters create update delete]]
              [maintenance_windows crud]
              ) )
-
-
-
-; precursor of the creator of all functions
-
