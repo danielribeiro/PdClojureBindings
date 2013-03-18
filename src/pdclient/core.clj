@@ -125,15 +125,7 @@
         ]
     (simplify-fn path-list (pdrequest method path-list kvs))))
 
-(defn event-trigger [& args]
-  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :trigger])))
-
-(defn event-ack [& args]
-  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :acknowledge])))
-
-(defn event-resolve [& args]
-  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :resolve])))
-
+(defn pd-event-api [type argslist] (generic-pdrequest 'post events-api-endpoint (concat argslist [:event_type type])))
 
 (defn grab
   "Helper from grabing a few keys from json output. Works if json is an array or an object
@@ -211,6 +203,10 @@
               [email-filters create update delete]]
              [maintenance_windows crud]
              ))
+
+(defn event-trigger [& args] (pd-event-api :trigger args))
+(defn event-ack [& args] (pd-event-api :acknowledge args))
+(defn event-resolve [& args] (pd-event-api :resolve args))
 
 ;; doc helper.
 (defn printroutes []
