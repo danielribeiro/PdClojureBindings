@@ -125,6 +125,16 @@
         ]
     (simplify-fn path-list (pdrequest method path-list kvs))))
 
+(defn event-trigger [& args]
+  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :trigger])))
+
+(defn event-ack [& args]
+  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :acknowledge])))
+
+(defn event-resolve [& args]
+  (generic-pdrequest 'post events-api-endpoint (concat args [:event_type :resolve])))
+
+
 (defn grab
   "Helper from grabing a few keys from json output. Works if json is an array or an object
   Example:
