@@ -4,6 +4,8 @@
         pdclient.basic-helpers
         ))
 
+(def events-api-endpoint "https://events.pagerduty.com/generic/2010-04-15/create_event.json")
+
 (def basic-auth-credentials nil)
 
 (defn setup-auth [map] (def basic-auth-credentials map))
@@ -30,13 +32,16 @@
 (defn- get-id [arg]
   (if (map? arg) (->> arg :id name) (name arg)))
 
-(defn pdrequest [method path-list args]
+(defn generic-pdrequest [method url args]
   (:body ((resolve (symbol "clj-http.client" (name method)))
-           (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map get-id path-list)) )
+           url
            (set-params method {
-     :content-type :json
-     :accept :json
-     :as :json} (args-to-map args)))))
+              :content-type :json
+              :accept :json
+              :as :json} (args-to-map args)))))
+
+(defn pdrequest [method path-list args]
+  (generic-pdrequest method (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map get-id path-list))) args))
 
 (defn simplify-single-result [path-list json]
   (let [penultimate (nth (reverse path-list) 1)
