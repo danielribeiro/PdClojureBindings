@@ -1,10 +1,8 @@
 (ns pdclient.core
   (:require [clj-http.client])
-  (:use [clojure.string :only [join]]))
-
-(defn args-to-map [args-list]
-  (if (nil? args-list) {}
-  (into {} (mapv vec (partition 2 args-list)))))
+  (:use [clojure.string :only [join]]
+        pdclient.basic-helpers
+        ))
 
 (def basic-auth-credentials nil)
 
@@ -31,11 +29,6 @@
      :accept :json
      :as :json} (args-to-map args)))))
 
-(defn singularize [str] (subs str 0 (- (count str) 1 )))
-
-(defn singularize-keyword "Also works for symbols" [kw]
-  (->> kw name singularize keyword))
-
 (defn simplify-single-result [path-list json]
   (let [penultimate (nth (reverse path-list) 1)
         singular-keyword (singularize-keyword penultimate)]
@@ -60,21 +53,7 @@
      'update simplify-single-result
      'delete (constantly nil)})
 
-(def compact (partial remove nil?))
-
 (defn- parent-list [route]  (compact [(:parent route) (:element route)]))
-
-(defn- concat-vec [coll1 coll2] (vec (concat coll1 coll2)))
-
-(defn- interleave+ [vec1 vec2]
-  "Like interleave, but appends all the remaining elements to the returning vector. Always returns a vector"
-  (let [ret (vec (interleave vec1 vec2))
-        size1 (count vec1)
-        size2 (count vec2)]
-    (cond
-      (< size1 size2) (concat-vec ret (subvec vec2 size1))
-      (> size1 size2) (concat-vec ret (subvec vec1 size2))
-      :else ret)))
 
 (defn- spec-name [routespec]
   (let [spec (:route-spec routespec)]
@@ -82,12 +61,6 @@
       nil
       (last spec)))
   )
-
-(defn- conj? [coll x]
-  (if (nil? x)
-    coll
-    (conj coll x)
-    ))
 
 (defn path-list-of [routespec idlist]
   (let [parents (->> routespec :route parent-list vec)]
@@ -148,15 +121,10 @@
     (select-keys json args)
     (map #(select-keys % args) json)))
 
-(defn partition-with [pred coll]
-  [(filter pred coll) (remove pred coll)])
-
 (defn complex? [expr] (some vector? expr))
 
 (defn dsl-node [element parent routes]
   {:element element :parent parent :routes routes})
-
-(def rest-vec (comp vec rest))
 
 ; Helper function for parsing the dsl above on def pd
 (defn linearize
