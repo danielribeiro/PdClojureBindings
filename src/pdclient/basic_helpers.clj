@@ -1,4 +1,5 @@
-(ns pdclient.basic-helpers)
+(ns pdclient.basic-helpers
+  (:require [clojure.string :as string]))
 
 
 (defn args-to-map [args-list]
@@ -40,3 +41,5 @@
 (def rest-vec (comp vec rest))
 
 (defn prit [arg] (do (prn arg) arg))
+
+(defn dasherize [s] (string/replace s "_" "-"))

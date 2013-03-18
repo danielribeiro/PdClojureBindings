@@ -155,14 +155,15 @@
          'delete "-delete"}
          base (->> routespec :route :element name singularize)
         suffix (->> routespec :route-spec base-path-suffix)]
-    (symbol (str base suffix))))
+    (->> (str base suffix) dasherize symbol)))
 
 (defn- any-route-to-function-name [routespec]
   (let [base (->> routespec :route :element name singularize)
         suffix (->> routespec :route-spec last)
         plural-str (if (= (->> routespec :route-spec count) 3) "" "s")
         ]
-    (symbol (str base plural-str "-" suffix))))
+    (->> (str base plural-str "-" suffix) dasherize symbol)))
+
 
 (defn- route-to-function-name [routespec]
   (if (list? (:route-spec routespec))
@@ -200,4 +201,3 @@
 (defn printroutes []
   (let [vars (mapcat route-specs (mapcat linearize pd-routes))]
     (doseq [x vars]  (println (route-to-function-name x)) (prn x))))
-
