@@ -38,3 +38,5 @@
   [(filter pred coll) (remove pred coll)])
 
 (def rest-vec (comp vec rest))
+
+(defn prit [arg] (do (prn arg) arg))

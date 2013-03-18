@@ -21,9 +21,12 @@
   (let [extra-key (if (= method :get) :query-params :form-params)]
     (assoc req-map extra-key params-map)))
 
+(defn- get-id [arg]
+  (if (map? arg) (->> arg :id name) (name arg)))
+
 (defn pdrequest [method path-list args]
   (:body ((resolve (symbol "clj-http.client" (name method)))
-           (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map name path-list)) )
+           (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map get-id path-list)) )
     (set-params method {:basic-auth [(auth :user) (auth :password)]
      :content-type :json
      :accept :json
@@ -35,13 +38,14 @@
     (singular-keyword json)))
 
 
+(defn simplitfy-list [path-list json]
+  (->> (last path-list) keyword json  ))
+
 (defn simplify-any [path-list json]
   (if (= (count json) 1)
     (first (vals json))
-    (or ((last path-list) json) json)))
+    (or (simplitfy-list path-list json) json)))
 
-(defn simplitfy-list [path-list json]
-   ((last path-list) json))
 
 (defn simplitfy-create [path-list json]
   ((->> path-list last singularize-keyword) json))
