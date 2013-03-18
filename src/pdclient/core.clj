@@ -18,7 +18,7 @@
   )
 
 (defn set-params [method req-map params-map]
-  (let [extra-key (if (= method :get) :query-params :form-params)
+  (let [extra-key (if (= (keyword method) :get) :query-params :form-params)
         params  (assoc req-map extra-key params-map)
         ]
     (if (auth :token )
@@ -33,7 +33,7 @@
 (defn pdrequest [method path-list args]
   (:body ((resolve (symbol "clj-http.client" (name method)))
            (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map get-id path-list)) )
-    (set-params method {
+           (set-params method {
      :content-type :json
      :accept :json
      :as :json} (args-to-map args)))))
