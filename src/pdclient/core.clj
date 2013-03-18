@@ -18,8 +18,14 @@
   )
 
 (defn set-params [method req-map params-map]
-  (let [extra-key (if (= method :get) :query-params :form-params)]
-    (assoc req-map extra-key params-map)))
+  (let [extra-key (if (= method :get) :query-params :form-params)
+        params  (assoc req-map extra-key params-map)
+        ]
+    (if (auth :token )
+      (assoc params :headers {"Authorization" (str "Token token=" (auth :token)) })
+      (assoc params :basic-auth [(auth :user) (auth :password)])
+      )
+   ))
 
 (defn- get-id [arg]
   (if (map? arg) (->> arg :id name) (name arg)))
@@ -27,7 +33,7 @@
 (defn pdrequest [method path-list args]
   (:body ((resolve (symbol "clj-http.client" (name method)))
            (str "https://" (auth :subdomain) ".pagerduty.com/api/v1/" (join "/" (map get-id path-list)) )
-    (set-params method {:basic-auth [(auth :user) (auth :password)]
+    (set-params method {
      :content-type :json
      :accept :json
      :as :json} (args-to-map args)))))
@@ -193,6 +199,5 @@
 ;; doc helper.
 (defn printroutes []
   (let [vars (mapcat route-specs (mapcat linearize pd-routes))]
-    (doseq [x vars]  (println (route-to-function-name x)) (prn x))
-    ))
+    (doseq [x vars]  (println (route-to-function-name x)) (prn x))))
 

@@ -1,7 +1,6 @@
-1. allow hashes, not only ids
-2. events api
-3. support auth key
-4. clojars and readme
+0. dasherize
+1. events api
+2. clojars and readme
 
 
 Simplify algo for non crud:
