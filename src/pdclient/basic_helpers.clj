@@ -4,7 +4,7 @@
 
 (defn args-to-map [args-list]
   (if (nil? args-list) {}
-    (into {} (mapv vec (partition 2 args-list)))))
+    (into {} (map vec (partition 2 args-list)))))
 
 (defn singularize [str] (subs str 0 (- (count str) 1 )))
 
