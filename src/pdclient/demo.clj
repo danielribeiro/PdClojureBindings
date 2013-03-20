@@ -4,6 +4,7 @@
   (:require [cheshire.core :refer :all]))
 
 
+; CHANGE THIS:
 (setup-auth {:subdomain "your-subdomain"
              :token "your-accout-token"
              })
@@ -13,6 +14,11 @@
 ;             :user "your-username"
 ;             :password "your-password"
 ;             })
+
+
+; CHANGE THIS TOO:
+(def service-key "one-of-your-service-keys" )
+
 
 
 (defn print-all-data []
@@ -50,8 +56,19 @@
       (println "Updating the contact method")
       (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
       (println "Deleting the contact method")
-      (puts (contact-method-delete userid new-contact-method))
-      )))
+      (puts (contact-method-delete userid new-contact-method)))))
+
+
+(defn events-api []
+  (do
+    (println "Creating an event")
+    (let [new-event (event-trigger :service_key service-key :description "clojure really rocks")]
+      (puts new-event)
+      (println "Acknowledging the event")
+      (puts (event-ack  :service_key service-key :incident_key new-event))
+      (println "Resolving the event")
+      (puts (event-resolve :service_key service-key :incident_key new-event)))))
+
 
 (defn -main [& args]
   (do
@@ -59,4 +76,5 @@
     (getting-nested-resources)
     (paginating)
     (crud-operations)
-      ))
+    (events-api)))
+

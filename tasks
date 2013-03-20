@@ -1,26 +1,2 @@
 1. clojars
-2. samples
-3. readme
-
-
-Simplify algo for non crud:
-- if there is only one element: simplify
-- if there is more than one element, simplify with the last part of the url, if possible    (regenerate_key preview count ok, incidents_per_time not so ok )
-
-Simplify algo for crud:
-- list: same as above
-- show: simplify using simplify-single-result
-- update: simplify using simplify-single-result
-- create: pdcreate (->> path-list last singularize-keyword)
-- delete: return nil
-
-
-names: crud case
-- list: element
-- show: singular element
-- update: singular element -update
-- create: singular element -new
-- delete: singular element -delete
-
-names: non crud case
-element + first(route-spec)
+2. readme
