@@ -17,7 +17,7 @@
 
 (defn print-all-data []
   (do
-    (prn "All my 'recent' pagerduty data is:")
+    (println "All my 'recent' pagerduty data is:")
     (puts
       (users)
       (incidents)
@@ -28,8 +28,14 @@
       (services)
       (log-entries))))
 
+(defn getting-nested-resources []
+  (let [service (first (schedules))]
+    (println "The overrides for the first schedule:")
+    (puts (overrides service :since "2013-03-01" :until "2013-03-15"))))
+
 
 (defn -main [& args]
   (do
     (print-all-data)
+    (getting-nested-resources)
       ))
