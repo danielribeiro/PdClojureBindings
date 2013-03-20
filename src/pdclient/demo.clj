@@ -35,9 +35,28 @@
 
 (defn paginating [] (puts (incidents :limit 3 :offset 0)))
 
+(defn crud-operations []
+  (let [userid (first (users))
+        first-contact-method (first (contact-methods userid))
+        ]
+    (println "Operating on contact methods")
+    (println "All contact methods:")
+    (puts  (contact-methods userid))
+    (println "The details of the first one")
+    (puts (contact-method userid first-contact-method))
+    (println "Creating a new contact method")
+    (let [new-contact-method (contact-method-new userid :contact_method {:type :email :address "rich_hickey@example.com"} )]
+      (puts new-contact-method)
+      (println "Updating the contact method")
+      (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
+      (println "Deleting the contact method")
+      (puts (contact-method-delete userid new-contact-method))
+      )))
+
 (defn -main [& args]
   (do
     (print-all-data)
     (getting-nested-resources)
     (paginating)
+    (crud-operations)
       ))

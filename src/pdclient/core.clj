@@ -213,4 +213,5 @@
 ;; doc helper.
 (defn printroutes []
   (let [vars (mapcat route-specs (mapcat linearize pd-routes))]
-    (doseq [x vars]  (println (route-to-function-name x)) (prn x))))
+    (doseq [x vars]  (println (get-method-of x)) (prn (route-to-function-name x)) (prn x) (newline))))
+
