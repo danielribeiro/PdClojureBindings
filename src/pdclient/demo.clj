@@ -33,9 +33,11 @@
     (println "The overrides for the first schedule:")
     (puts (overrides service :since "2013-03-01" :until "2013-03-15"))))
 
+(defn paginating [] (puts (incidents :limit 3 :offset 0)))
 
 (defn -main [& args]
   (do
     (print-all-data)
     (getting-nested-resources)
+    (paginating)
       ))
