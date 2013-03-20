@@ -162,20 +162,22 @@
          'delete "-delete"}
          base (->> routespec :route :element name singularize)
         suffix (->> routespec :route-spec base-path-suffix)]
-    (->> (str base suffix) dasherize symbol)))
+    (str base suffix)))
 
 (defn- any-route-to-function-name [routespec]
   (let [base (->> routespec :route :element name singularize)
         suffix (->> routespec :route-spec last)
         plural-str (if (= (->> routespec :route-spec count) 3) "" "s")
         ]
-    (->> (str base plural-str "-" suffix) dasherize symbol)))
+    (str base plural-str "-" suffix)))
 
+
+(defn- normalize-name [str] (if (= str "log-entrie")  "log-entry" str ))
 
 (defn- route-to-function-name [routespec]
-  (if (list? (:route-spec routespec))
+   (->> (if (list? (:route-spec routespec))
     (any-route-to-function-name routespec)
-    (symbol-route-to-function-name routespec)))
+    (symbol-route-to-function-name routespec)) dasherize normalize-name symbol))
 
 
 (defmacro define-pd-api [routespec]
