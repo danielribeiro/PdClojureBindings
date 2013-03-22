@@ -6,74 +6,89 @@ Unoficial Clojure bindings for [PagerDuty](http://www.pagerduty.com) API. The do
 
 Import the bindings into your code:
 
-    (ns com.my-company.using-pagerduty
-      (:use pdclient.core))
+```clojure
+(ns com.my-company.using-pagerduty
+    (:use pdclient.core))
+```
 
 
 Start by setting up your credentials:
 
-    (setup-auth {:subdomain "your-subdomain"
-                 :token "your-accout-token"})
+```clojure
+(setup-auth {:subdomain "your-subdomain"
+             :token "your-accout-token"})
+ ```
 
 You can also use username/password:
 
-    (setup-auth {:subdomain "your-subdomain"
-                 :user "your-username"
-                 :password "your-password"
-                 })
+```clojure
+(setup-auth {:subdomain "your-subdomain"
+             :user "your-username"
+             :password "your-password"
+             })
+ ```
 
 Reading all your recent top level data from PagerDuty:
-    (do
-        (prn
-          (users)
-          (incidents)
-          (alerts :since "2013-03-01" :until "2013-03-15")
-          (schedules)
-          (reports-alerts-per-time :since "2013-03-01" :until "2013-03-15")
-          (reports-incidents-per-time :since "2013-03-01" :until "2013-03-15" )
-          (services)
-          (log-entries)))
+
+```clojure
+(do
+    (prn
+      (users)
+      (incidents)
+      (alerts :since "2013-03-01" :until "2013-03-15")
+      (schedules)
+      (reports-alerts-per-time :since "2013-03-01" :until "2013-03-15")
+      (reports-incidents-per-time :since "2013-03-01" :until "2013-03-15" )
+      (services)
+      (log-entries)))
+```
 
 Getting nested resources:
-     (let [service (first (schedules))]
-        (println "The overrides for the first schedule:")
-        (prn (overrides service :since "2013-03-01" :until "2013-03-15")))
+
+```clojure
+ (let [service (first (schedules))]
+    (println "The overrides for the first schedule:")
+    (prn (overrides service :since "2013-03-01" :until "2013-03-15")))
+```
 
 Pagination works jsut as in the REST api:
 
-    (incidents :limit 3 :offset 0)
-
+```clojure
+(incidents :limit 3 :offset 0)
+```
 
 Basic show, list, create, update and delete operations:
 
-    (let [userid (first (users))
-        first-contact-method (first (contact-methods userid))
-        ]
-    (println "Operating on contact methods")
-    (println "All contact methods:")
-    (prn  (contact-methods userid))
-    (println "The details of the first one")
-    (prn (contact-method userid first-contact-method))
-    (println "Creating a new contact method")
-    (let [new-contact-method (contact-method-new userid :contact_method {:type :email :address "rich_hickey@example.com"} )]
-      (prn new-contact-method)
-      (println "Updating the contact method")
-      (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
-      (println "Deleting the contact method")
-      (prn (contact-method-delete userid new-contact-method))))
-
+```clojure
+(let [userid (first (users))
+    first-contact-method (first (contact-methods userid))
+    ]
+(println "Operating on contact methods")
+(println "All contact methods:")
+(prn  (contact-methods userid))
+(println "The details of the first one")
+(prn (contact-method userid first-contact-method))
+(println "Creating a new contact method")
+(let [new-contact-method (contact-method-new userid :contact_method {:type :email :address "rich_hickey@example.com"} )]
+  (prn new-contact-method)
+  (println "Updating the contact method")
+  (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
+  (println "Deleting the contact method")
+  (prn (contact-method-delete userid new-contact-method))))
+```
 
 Using Events API (for incident creation):
 
-    (do
-        (println "Creating an event")
-        (let [new-event (event-trigger :service_key service-key :description "clojure really rocks")]
-          (prn new-event)
-          (println "Acknowledging the event")
-          (prn (event-ack  :service_key service-key :incident_key new-event))
-          (println "Resolving the event")
-          (prn (event-resolve :service_key service-key :incident_key new-event))))
-
+```clojure
+(do
+    (println "Creating an event")
+    (let [new-event (event-trigger :service_key service-key :description "clojure really rocks")]
+      (prn new-event)
+      (println "Acknowledging the event")
+      (prn (event-ack  :service_key service-key :incident_key new-event))
+      (println "Resolving the event")
+      (prn (event-resolve :service_key service-key :incident_key new-event))))
+```
 
 ## PagerDuty Functions
 
