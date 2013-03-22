@@ -84,7 +84,7 @@ Getting nested resources:
     (prn (overrides service :since "2013-03-01" :until "2013-03-15")))
 ```
 
-Pagination works jsut as in the REST api:
+Pagination works just as in the REST api:
 
 ```clojure
 (incidents :limit 3 :offset 0)
@@ -138,7 +138,7 @@ Using Events API (for incident creation):
 
 ## PagerDuty Functions
 
-The following funcitons are on the pdclient.core namespace (docs on how to use them are found [here](http://developer.pagerduty.com)):
+The following functions are on the pdclient.core namespace (docs on how to use them are found [here](http://developer.pagerduty.com)):
 
 ```clojure
 incidents
