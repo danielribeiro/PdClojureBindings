@@ -3,4 +3,4 @@ target
 .lein-repl-history
 .lein-failures
 lib
-pom.xml
+pom.xml*

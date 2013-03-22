@@ -1,7 +1,6 @@
 (ns pdclient.demo
   (:use pdclient.core clojure.pprint)
-  (:require [clj-http.client])
-  (:require [cheshire.core :refer :all]))
+  (:require [clj-http.client]))
 
 
 ; CHANGE THIS:
@@ -20,6 +19,11 @@
 (def service-key "one-of-your-service-keys" )
 
 
+(defn puts [& values]
+  (doseq [value values]
+    (pprint value)
+    (newline)
+    (newline)))
 
 (defn print-all-data []
   (do
