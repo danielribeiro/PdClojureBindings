@@ -10,5 +10,4 @@
                  [clj-http "0.6.4"]
                  [cheshire "5.0.1"]
                  ]
-  :main pdclient.demo
   )
