@@ -92,7 +92,8 @@ Basic show, list, create, update and delete operations:
 (println "The details of the first one")
 (prn (contact-method userid first-contact-method))
 (println "Creating a new contact method")
-(let [new-contact-method (contact-method-new userid :contact_method {:type :email :address "rich_hickey@example.com"} )]
+(let [new-contact-method
+      (contact-method-new userid :contact_method {:type :email :address "rich_hickey@example.com"} )]
   (prn new-contact-method)
   (println "Updating the contact method")
   (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
@@ -100,7 +101,7 @@ Basic show, list, create, update and delete operations:
   (prn (contact-method-delete userid new-contact-method))))
 ```
 
-*Note:* anytime you are passing an id, you can also pass an map with the :id key. Which is why this example we can write
+*Note:* anytime you are passing an id, you can also pass an map with the :id key. Which is why in this example we can write
 
 ```clojure
 (contact-method-update userid new-contact-method :contact_method {:address "not_rich_hickey@example.com" })
