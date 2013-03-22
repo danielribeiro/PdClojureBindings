@@ -1,6 +1,6 @@
 # PdClojureBindings
 
-Unoficial Clojure bindings for [PagerDuty](http://www.pagerduty.com/) API. The docs for the API can be found at [http://developer.pagerduty.com/](http://developer.pagerduty.com/).
+Unoficial Clojure bindings for [PagerDuty](http://www.pagerduty.com) API. The docs for the API can be found at [http://developer.pagerduty.com](http://developer.pagerduty.com).
 
 ## Basic Usage
 
@@ -26,7 +26,7 @@ You can also use username/password:
 
 ## PagerDuty Functions
 
-The following funcitons are on the pdclient.core namespace:
+The following funcitons are on the pdclient.core namespace (docs on how to use them are found [here](http://developer.pagerduty.com)):
 
     incidents
     incident-update
@@ -81,6 +81,9 @@ The following funcitons are on the pdclient.core namespace:
     maintenance-window
     maintenance-window-delete
     maintenance-windows
+    event-trigger
+    event-ack
+    event-resolve
 
 
 ## Meta
