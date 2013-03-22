@@ -77,4 +77,3 @@
     (paginating)
     (crud-operations)
     (events-api)))
-
