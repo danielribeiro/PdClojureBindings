@@ -2,6 +2,14 @@
 
 Unoficial Clojure bindings for [PagerDuty](http://www.pagerduty.com) API. The docs for the API can be found at [http://developer.pagerduty.com](http://developer.pagerduty.com).
 
+# Installing
+
+pdclient is available as a Maven artifact from [Clojars](https://clojars.org/pdclient)
+
+```clojure
+[pdclient "0.1.1"]
+```
+
 ## Basic Usage
 
 *Note:* The following code is in runnable form on [demo.clj](https://github.com/danielribeiro/PdClojureBindings/blob/master/src/pdclient/demo.clj)
