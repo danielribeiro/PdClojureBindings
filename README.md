@@ -130,63 +130,64 @@ Using Events API (for incident creation):
 
 The following funcitons are on the pdclient.core namespace (docs on how to use them are found [here](http://developer.pagerduty.com)):
 
-    incidents
-    incident-update
-    incident
-    incidents-count
-    incident-log-entries
-    alerts
-    reports-alerts-per-time
-    reports-incidents-per-time
-    schedule-update
-    schedule-new
-    schedule
-    schedule-delete
-    schedules
-    schedule-users
-    schedules-preview
-    schedule-entries
-    overrides
-    override-new
-    override-delete
-    user-update
-    user-new
-    user
-    user-delete
-    users
-    user-log-entries
-    contact-method-update
-    contact-method-new
-    contact-method
-    contact-method-delete
-    contact-methods
-    notification-rule-update
-    notification-rule-new
-    notification-rule
-    notification-rule-delete
-    notification-rules
-    log-entries
-    log-entry
-    service-update
-    service-new
-    service
-    service-delete
-    services
-    service-disable
-    service-enable
-    service-regenerate-key
-    email-filter-new
-    email-filter-update
-    email-filter-delete
-    maintenance-window-update
-    maintenance-window-new
-    maintenance-window
-    maintenance-window-delete
-    maintenance-windows
-    event-trigger
-    event-ack
-    event-resolve
-
+```clojure
+incidents
+incident-update
+incident
+incidents-count
+incident-log-entries
+alerts
+reports-alerts-per-time
+reports-incidents-per-time
+schedule-update
+schedule-new
+schedule
+schedule-delete
+schedules
+schedule-users
+schedules-preview
+schedule-entries
+overrides
+override-new
+override-delete
+user-update
+user-new
+user
+user-delete
+users
+user-log-entries
+contact-method-update
+contact-method-new
+contact-method
+contact-method-delete
+contact-methods
+notification-rule-update
+notification-rule-new
+notification-rule
+notification-rule-delete
+notification-rules
+log-entries
+log-entry
+service-update
+service-new
+service
+service-delete
+services
+service-disable
+service-enable
+service-regenerate-key
+email-filter-new
+email-filter-update
+email-filter-delete
+maintenance-window-update
+maintenance-window-new
+maintenance-window
+maintenance-window-delete
+maintenance-windows
+event-trigger
+event-ack
+event-resolve
+```
 
 ## Meta
 
