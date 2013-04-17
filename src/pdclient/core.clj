@@ -192,7 +192,8 @@
       `(def pd-routes (quote ~form)))))
 
 (defineall (
-             [incidents list update show (get count) (get :id log_entries)]
+             [incidents list update show (get count) (get :id log_entries)
+              [notes list create]]
              [alerts list]
              [reports (get alerts_per_time) (get incidents_per_time)]
              [schedules crud (get :id users ) (post preview) (get :id entries)
