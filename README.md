@@ -146,6 +146,8 @@ incident-update
 incident
 incidents-count
 incident-log-entries
+notes
+note-new
 alerts
 reports-alerts-per-time
 reports-incidents-per-time
