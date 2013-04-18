@@ -1,4 +1,4 @@
-(defproject pdclient "0.1.1"
+(defproject pdclient "0.1.2"
   :description "pagerduty"
   :url "https://github.com/danielribeiro/PdClojureBindings"
   :license {:name "The MIT License"
@@ -7,7 +7,7 @@
   :warn-on-reflection false
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [clj-http "0.6.4"]
+                 [clj-http "0.7.2"]
                  [cheshire "5.0.1"]
                  ]
   )
