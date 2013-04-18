@@ -63,7 +63,7 @@
 
 (def simplify-case
     {'list simplitfy-list
-     'show simplify-single-result
+     'show simplify-any
      'create simplitfy-create
      'update simplify-single-result
      'delete (constantly nil)})
