@@ -9,7 +9,7 @@ Unofficial Clojure bindings for [PagerDuty](http://www.pagerduty.com) API. The d
 pdclient is available as a Maven artifact from [Clojars](https://clojars.org/pdclient)
 
 ```clojure
-[pdclient "0.1.1"]
+[pdclient "0.1.2"]
 ```
 
 ## Basic Usage
