@@ -40,7 +40,7 @@
 
 (def rest-vec (comp vec rest))
 
-; Debugging helper. Usage: (prit + 1 2) which is simlar to (prn (+ 1 2)), but returns 3, instead of nil
+; Debugging helper. Example of usage: (prit + 1 2) which is simlar to (prn (+ 1 2)), but returns 3, instead of nil
 (defmacro prit [& form]
   `(let [res# (~@form)]
      (prn res#)
