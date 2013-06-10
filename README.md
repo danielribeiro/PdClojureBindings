@@ -148,6 +148,11 @@ incidents-count
 incident-log-entries
 notes
 note-new
+escalation-policie-update
+escalation-policie-new
+escalation-policie
+escalation-policie-delete
+escalation-policies
 alerts
 reports-alerts-per-time
 reports-incidents-per-time
