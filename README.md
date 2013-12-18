@@ -1,6 +1,8 @@
 # PdClojureBindings
 
-Unofficial Clojure bindings for [PagerDuty](http://www.pagerduty.com) API. The docs for the API can be found at [http://developer.pagerduty.com](http://developer.pagerduty.com).
+Unofficial Clojure bindings for [PagerDuty's](http://www.pagerduty.com) API.
+
+The docs for the API can be found at [http://developer.pagerduty.com](http://developer.pagerduty.com).
 
 [![Continuous Integration status](https://travis-ci.org/danielribeiro/PdClojureBindings.png?branch=master)](https://travis-ci.org/danielribeiro/PdClojureBindings)
 
