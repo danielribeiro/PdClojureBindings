@@ -11,9 +11,9 @@ The docs for the API can be found at [http://developer.pagerduty.com](http://dev
 
 pdclient is available as a Maven artifact from [Clojars](https://clojars.org/pdclient) [![Clojars Project](http://clojars.org/pdclient/latest-version.svg)](http://clojars.org/pdclient)
 
--```clojure
--[pdclient "0.1.3"]
--```
+```clojure
+[pdclient "0.1.3"]
+```
 
 ## Basic Usage
 
