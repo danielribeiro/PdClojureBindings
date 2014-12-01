@@ -6,13 +6,12 @@ The docs for the API can be found at [http://developer.pagerduty.com](http://dev
 
 [![Continuous Integration status](https://travis-ci.org/danielribeiro/PdClojureBindings.png?branch=master)](https://travis-ci.org/danielribeiro/PdClojureBindings)
 
+
 # Installing
 
 pdclient is available as a Maven artifact from [Clojars](https://clojars.org/pdclient)
 
-```clojure
-[pdclient "0.1.2"]
-```
+[![Clojars Project](http://clojars.org/pdclient/latest-version.svg)](http://clojars.org/pdclient)
 
 ## Basic Usage
 
