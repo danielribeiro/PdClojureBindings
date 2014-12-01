@@ -1,4 +1,4 @@
-(defproject pdclient "0.1.2"
+(defproject pdclient "0.1.3"
   :description "pagerduty"
   :url "https://github.com/danielribeiro/PdClojureBindings"
   :license {:name "The MIT License"
