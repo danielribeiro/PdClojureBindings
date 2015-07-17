@@ -6,8 +6,8 @@
             :distribution :repo}
   :warn-on-reflection false
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [clj-http "0.7.2"]
-                 [cheshire "5.0.1"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [clj-http "1.1.2"]
+                 [cheshire "5.5.0"]
                  ]
   )
