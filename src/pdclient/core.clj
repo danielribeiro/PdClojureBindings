@@ -199,7 +199,7 @@
              [reports (get alerts_per_time) (get incidents_per_time)]
              [schedules crud (get :id users ) (post preview) (get :id entries)
               [overrides list create delete]]
-             [users crud (get :id log_entries) (get :id on_call)
+             [users crud (get :id log_entries) (get :id on_call) (get on_call)
               [contact_methods crud]
               [notification_rules crud]]
              [log_entries list show]
