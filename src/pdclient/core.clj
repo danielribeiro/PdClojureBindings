@@ -194,12 +194,12 @@
 (defineall (
              [incidents list update show (get count) (get :id log_entries)
               [notes list create]]
-             [escalation_policies crud]
+             [escalation_policies crud (get on_call)]
              [alerts list]
              [reports (get alerts_per_time) (get incidents_per_time)]
              [schedules crud (get :id users ) (post preview) (get :id entries)
               [overrides list create delete]]
-             [users crud (get :id log_entries)
+             [users crud (get :id log_entries) (get :id on_call) (get on_call)
               [contact_methods crud]
               [notification_rules crud]]
              [log_entries list show]

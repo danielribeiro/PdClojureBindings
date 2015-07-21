@@ -157,6 +157,7 @@ escalation-policie-new
 escalation-policie
 escalation-policie-delete
 escalation-policies
+escalation-policies-on-call
 alerts
 reports-alerts-per-time
 reports-incidents-per-time
@@ -177,6 +178,7 @@ user
 user-delete
 users
 user-log-entries
+user-on-call
 contact-method-update
 contact-method-new
 contact-method
